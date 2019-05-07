@@ -17,6 +17,11 @@
         <attr name="big_scale_height" format="dimension" />
         <attr name="big_scale_color" format="reference|color" />
 
+        <!--刻度值的字体-->
+        <attr name="scale_text_size" format="dimension"/>
+        <attr name="scale_text_color" format="reference|color"/>
+        <attr name="scale_text_radius" format="dimension"/>
+
         <!--文字颜色-->
         <!--title颜色-->
         <attr name="dash_title_color" format="reference|color" />
@@ -34,6 +39,7 @@
         <!--指针颜色-->
         <attr name="pointer_color" format="reference|color"/>
         <attr name="pointer_size" format="dimension"/>
+
     </declare-styleable>
 
 </resources>

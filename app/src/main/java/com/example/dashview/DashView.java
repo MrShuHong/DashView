@@ -49,9 +49,6 @@ public class DashView extends View {
      */
     private float mArcWidth;
     private float currentValue;
-    private String mTitle;
-    private String mStandard;
-    private String mTime;
 
     /**
      * 仪表盘title文字 画笔
@@ -62,22 +59,69 @@ public class DashView extends View {
      * 文字 画笔
      */
     private Paint mTextPoint;
+
+    /**
+     * 刻度值画笔
+     */
+    private Paint mScaleTextPoint;
+
+    /**
+     * 小刻度 画笔参数 宽 高 和颜色
+     */
     private float mSmallScaleWidth;
     private float mSmallScaleHeight;
     private int mSmallScaleColor;
+
+    /**
+     * 大刻度 画笔参数 宽 高 和颜色
+     */
     private float mBigScaleWidth;
     private float mBigScaleHeight;
     private int mBigScaleColor;
+
+    /**
+     * 仪表盘名字参数
+     */
     private int mDashTitleColor;
     private float mDashTitleSize;
+
+    /**
+     * 普通文字参数
+     */
     private int mDashTextColor;
     private float mDashTextSize;
+
+    /**
+     * 正常圆弧颜色
+     */
     private int mNormalArcColor;
+    /**
+     * 危险值范围 圆弧颜色
+     */
     private int mDangerArcColor;
+    /**
+     * 报警值范围 圆弧颜色
+     */
     private int mWarningArcColor;
+
+    /**
+     * 指针 画笔参数
+     */
     private int mPointerColor;
-    private Rect mDashRect;
     private int mPointerSize;
+
+    private Rect mDashRect;
+
+    /**
+     * 刻度文字
+     */
+    private int mScaleTextSize;
+    private int mScaleTextRadius;
+    private int mScaleTextColor;
+
+    private String mTitle;
+    private String mStandard;
+    private String mTime;
 
     public DashView(Context context) {
         this(context, null);
@@ -107,9 +151,15 @@ public class DashView extends View {
         mBigScaleHeight = ta.getDimension(R.styleable.DashView_big_scale_height, dp2px(20));
         mBigScaleColor = ta.getColor(R.styleable.DashView_big_scale_color, Color.parseColor("#FFFF5722"));
 
+        //刻度值 文字颜色 字体 以及 大小
+        mScaleTextSize = ta.getDimensionPixelSize(R.styleable.DashView_scale_text_size, dp2px(14));
+        mScaleTextRadius = ta.getDimensionPixelSize(R.styleable.DashView_scale_text_radius, mPointerSize + dp2px(10));
+        mScaleTextColor = ta.getColor(R.styleable.DashView_scale_text_color, Color.parseColor("#999999"));
+
         //仪表盘的title颜色 和字体大小
         mDashTitleColor = ta.getColor(R.styleable.DashView_dash_title_color, Color.parseColor("#333333"));
         mDashTitleSize = ta.getDimension(R.styleable.DashView_dash_title_size, dp2px(16));
+
 
         //仪表盘 其他文字的颜色和字体大小
         mDashTextColor = ta.getColor(R.styleable.DashView_dash_text_color, Color.parseColor("#999999"));
@@ -126,35 +176,47 @@ public class DashView extends View {
         mTime = "05-07 16:30:30";
         mStandard = "报警：580~";
 
+        //title文字画笔
         mTitlePoint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTitlePoint.setTextSize(mDashTitleSize);
         mTitlePoint.setColor(mDashTitleColor);
         mTitlePoint.setTypeface(Typeface.DEFAULT_BOLD);
         mTitlePoint.setTextAlign(Paint.Align.CENTER);
 
+        //其他文字画笔
         mTextPoint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mTextPoint.setTextSize(mDashTextSize);
         mTextPoint.setColor(mDashTextColor);
         mTextPoint.setTextAlign(Paint.Align.CENTER);
 
+        //刻度值画笔
+        mScaleTextPoint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mScaleTextPoint.setTextSize(mScaleTextSize);
+        mScaleTextPoint.setColor(mScaleTextColor);
+        mScaleTextPoint.setTextAlign(Paint.Align.CENTER);
+
+        //小刻度画笔
         mSmallScalePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mSmallScalePaint.setStrokeWidth(dp2px(1));
         mSmallScalePaint.setStyle(Paint.Style.STROKE);
         mSmallScalePaint.setColor(mSmallScaleColor);
         mSmallScalePaint.setStrokeJoin(Paint.Join.BEVEL);
 
+        //大刻度画笔
         mBigScalePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mBigScalePaint.setStrokeWidth(dp2px(1));
         mBigScalePaint.setStyle(Paint.Style.STROKE);
         mBigScalePaint.setColor(mBigScaleColor);
         mBigScalePaint.setStrokeJoin(Paint.Join.BEVEL);
 
+        //圆弧画笔
         mArcPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mArcPaint.setStrokeWidth(mArcWidth);
         mArcPaint.setStyle(Paint.Style.STROKE);
         mArcPaint.setColor(mNormalArcColor);
         mArcPaint.setStrokeJoin(Paint.Join.BEVEL);
 
+        //指针画笔
         mPointerPaint = new Paint();
         mPointerPaint.setStyle(Paint.Style.FILL);
         mPointerPaint.setColor(mPointerColor);
@@ -162,16 +224,13 @@ public class DashView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        //super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        // 如果父布局是RelativeLayout 会实效
         int measuredHeight = getMeasuredHeight();
         int measuredWidth = getMeasuredWidth();
-
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        int height = MeasureSpec.getSize(heightMeasureSpec);
-        Log.d(TAG, "measuredHeight = " + height);
-        Log.d(TAG, "measuredWidth = " + width);
-        int min = Math.min(width, height);
-        setMeasuredDimension(getDefaultSize(min,widthMeasureSpec), getDefaultSize(min,widthMeasureSpec));
+        int min = Math.min(measuredHeight, measuredWidth);
+        setMeasuredDimension(min, min);
     }
 
     @Override
@@ -238,7 +297,7 @@ public class DashView extends View {
 
         //绘制刻度和百分比
         for (int i = 0; i <= count; i++) {
-            canvas.drawText(String.valueOf(i), 0, -mDashRect.width() / 4 + dp2px(10), mTextPoint);
+            canvas.drawText(String.valueOf(i), 0, -mScaleTextRadius, mScaleTextPoint);
             canvas.rotate(54);
         }
         canvas.restore();
