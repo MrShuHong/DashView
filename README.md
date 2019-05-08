@@ -1,7 +1,8 @@
 # DashView
 
 ##效果
-![效果图](images/1694046526.jpg)
+
+![效果图](https://github.com/MrShuHong/DashView/blob/master/images/1694046526.jpg)
 
 ````
 
