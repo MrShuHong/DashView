@@ -20,7 +20,6 @@
         <!--刻度值的字体-->
         <attr name="scale_text_size" format="dimension"/>
         <attr name="scale_text_color" format="reference|color"/>
-        <attr name="scale_text_radius" format="dimension"/>
 
         <!--文字颜色-->
         <!--title颜色-->
@@ -38,7 +37,9 @@
         <attr name="warning_arc_color" format="reference|color" />
         <!--指针颜色-->
         <attr name="pointer_color" format="reference|color"/>
-        <attr name="pointer_size" format="dimension"/>
+
+        <!--内部padding值-->
+        <attr name="dash_padding" format="dimension"/>
 
     </declare-styleable>
 

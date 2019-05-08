@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.dashview.DashView
+        android:id="@+id/dash_view"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:arc_width="15dp"
+        app:big_scale_height="5dp"
+        app:big_scale_width="2dp"
+        app:dash_title_size="13dp"
+        app:dash_text_size="10dp"
+        app:small_scale_height="3dp"
+        app:small_scale_width="1dp"
+        />
+</LinearLayout>
