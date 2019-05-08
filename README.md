@@ -1,7 +1,7 @@
 # DashView
 
 ##效果
-[]()
+[](https://github.com/MrShuHong/DashView/blob/master/images/1694046526.jpg)
 
 ````
 
